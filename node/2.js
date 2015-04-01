@@ -20,6 +20,12 @@ var _ = require('underscore'),
     async = require('async'),
     limit = 4000000;
 
+/**
+ * Return a term in the fibonacci sequence.
+ * See http://en.wikipedia.org/wiki/Fibonacci_number
+ * @param {Number} term - Which term in the sequence to calculate
+ * @returns {Number} The calculated term of the sequence
+ */
 var fib = function(term){
     if(term === 0){return 0;}
     if(term === 1){return 1;}
@@ -30,6 +36,7 @@ var terms = [],
     i=3,
     underLimit = true;
 
+//While we're not over the limit, add terms to the array
 async.whilst(
     function() { return underLimit; },
     function(callback) {

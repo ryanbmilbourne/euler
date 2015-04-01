@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/ryanbmilbourne/euler",
   "dependencies": {
+    "async": "^0.9.0",
     "underscore": "^1.8.2"
   }
 }
