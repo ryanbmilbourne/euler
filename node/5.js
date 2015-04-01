@@ -8,55 +8,89 @@
  *
  * Latest Run Stats
  * ====== === =====
+ * real    0m0.075s
+ * user    0m0.059s
+ * sys     0m0.016s
  *
- */
-
-/**
- * 20 -> 2 4 5 10
- * 19
- * 18 -> 2 3 6 9
- * 17
- * 16 -> 2 4 8
- * 15 -> 3 5
- * 14 -> 2 7
- * 13
- * 12 -> 2 3 4 6
- * 11
- * 10 -> 2 5
- * 9  -> 3
- * 8  -> 2 4
- * 7
- * 6  -> 2 3
- * 5
- * 4  -> 2
- * 3
- * 2
  */
 
 var _ = require('underscore'),
     async = require('async'),
-    limit = 10,
-    divisors = _.range(2,limit),
-    count = 10;
+    limit = 20; //Upper limit for divisors, where the list of divisors is 2..limit
 
-var found = false;
-async.until(
-    function(){ return found; },
-    function(callback){
-        //2 5 10?
-        if((count % 10) === 0 &&    // 2 5 10
-            (count % 9) === 0 &&    // 3 6 9 (6 since we've already tested for 2 and 3
-            (count % 8) === 0 &&    // 4
-            (count % 7) === 0){     // 7
-                found = true;
-                return callback();
+/**
+ * Builds an array of prime numbers 2...num using a simple sieve
+ * @param {Number} num - value under which to generate primes.
+ * @returns {Array} Array of primes, 2...num
+ */
+var primeSieve = function(num){
+    var sieve = _.range(num+1);
+    sieve[1] = 0; //we don't really care about 1.
+    var cutoff = Math.ceil(Math.sqrt(num));
+    var i,j;
+    for(i=2; i<=cutoff; i++){
+        for(j=i+i; j<sieve.length; j+=i){
+            sieve[j] = 0; //multiple of a prime, we don't need it
         }
-        count += 10;
-        return callback();
+    }
+    return _.compact(sieve);
+};
+
+/**
+ * This uses a method for factoring that I learned in high school
+ * (I never really got prime factorization too well the traditional way and this is more functional anyway :)
+ * Basically we use a table to map some division of primes across the list of divisors.
+ * Once the table is full of 1's, we are done and have the primes with which to calculate the LCM:
+ * 
+ * Figure this example:
+ * ====================
+ *      X 2 2 2 3 3 5 7
+ *      2 1 1 1 1 1 1 1 
+ *      3 3 3 3 1 1 1 1
+ *      4 2 1 1 1 1 1 1
+ *      5 5 5 5 5 5 1 1
+ *      6 3 3 3 1 1 1 1
+ *      7 7 7 7 7 7 7 1
+ *      8 4 2 1 1 1 1 1
+ *      9 9 9 9 3 1 1 1
+ *     10 5 5 5 5 5 1 1
+ *
+ * In the above example, we keep using a prime number until it no longer divides evenly, then grab the next one.
+ * Our answer is 2 * 2 * 2 * 3 * 3 * 5 * 7 = 2520
+ */
+
+var divisors = _.range(2,limit+1),
+    primes = primeSieve(_.max(divisors)),
+    primeIndex = 0,
+    lcmArr = [],
+    done = false;
+
+async.until(
+    function(){ return done; },
+    function(cb){
+        if(_.every(divisors, function(num){ return num === 1;})){
+            //All done, time to go calculate the lcm
+            done = true;
+            return cb();
+        }
+        if(_.some(divisors, function(num){ return (num % primes[primeIndex]) === 0; })){
+            //We can evenly divide, so map the division function onto the divisor array
+            lcmArr.push(primes[primeIndex]);
+            divisors = _.map(divisors, function(num){
+                if(num % primes[primeIndex] === 0){
+                    return num/primes[primeIndex];
+                }
+                return num;
+            });
+            return cb();
+        }
+        //This prime won't divide into anything so go get another one
+        primeIndex++;
+        return cb();
     },
     function(){
-        //all done
-        console.log(count); //should be the only print statement
+        var lcm = _.reduce(lcmArr, function(memo, num){ return memo * num; }, 1);
+        console.log(lcm);
     }
 );
 
