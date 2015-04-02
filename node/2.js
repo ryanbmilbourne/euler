@@ -10,9 +10,9 @@
  *
  * Latest Run Stats
  * ====== === =====
- * real    0m0.446s
- * user    0m0.428s
- * sys     0m0.018s
+ * real    0m0.075s
+ * user    0m0.058s
+ * sys     0m0.015s
  *
  */
 
@@ -21,15 +21,14 @@ var _ = require('underscore'),
     limit = 4000000;
 
 /**
- * Return a term in the fibonacci sequence.
+ * Return a term in the fibonacci sequence generated using Binet's formula
  * See http://en.wikipedia.org/wiki/Fibonacci_number
  * @param {Number} term - Which term in the sequence to calculate
  * @returns {Number} The calculated term of the sequence
  */
-var fib = function(term){
-    if(term === 0){return 0;}
-    if(term === 1){return 1;}
-    return fib(term-1) + fib(term-2);
+var fib = function(num){
+    var rootFive = Math.sqrt(5);
+    return (Math.pow(1+rootFive,num) - Math.pow(1-rootFive, num)) / (Math.pow(2,num) * rootFive);
 };
 
 var terms = [],
