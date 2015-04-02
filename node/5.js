@@ -27,9 +27,9 @@ var primeSieve = function(num){
     var sieve = _.range(num+1);
     sieve[1] = 0; //we don't really care about 1.
     var cutoff = Math.ceil(Math.sqrt(num));
-    var i,j;
+    var i;
     for(i=2; i<=cutoff; i++){
-        for(j=i+i; j<sieve.length; j+=i){
+        for(var j=i+i, len=sieve.length; j<len; j+=i){
             sieve[j] = 0; //multiple of a prime, we don't need it
         }
     }
