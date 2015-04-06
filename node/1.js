@@ -14,8 +14,7 @@
  *
  */
 
-var _ = require('underscore'),
-    sieve = [],
+var sieve = [],
     i;
 
 //pre-fill array with 0s
@@ -32,5 +31,5 @@ for(i=5; i<1000; i+=5){
 }
 
 //Map reduce to get the sum
-var answer =  _.reduce(sieve, function(memo, num){return memo + num;}, 0);
+var answer =  sieve.reduce(function(memo, num){return memo + num;});
 console.log(answer);

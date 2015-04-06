@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict";
 
 /**
  * Problem
@@ -10,9 +11,9 @@
  *
  * Latest Run Stats
  * ====== === =====
- * real    0m0.075s
- * user    0m0.058s
- * sys     0m0.015s
+ * real    0m0.059s
+ * user    0m0.043s
+ * sys     0m0.014s
  *
  */
 
