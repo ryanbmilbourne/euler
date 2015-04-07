@@ -66,6 +66,7 @@ for(var i=0; i<helperArr.length; i++){
     helperArr[i] = i;
 }
 
+//use the helper indicies to calculate the products
 helperArr.map(function(idx){
     var prod = 1;
     var endIdx = idx+consLen;
