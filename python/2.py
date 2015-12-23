@@ -46,6 +46,5 @@ while(term<cap):
     i=i+3
 
 answer = reduce(lambda x,y: x+y, terms)
-print terms
 
 print answer #should me only print statement
